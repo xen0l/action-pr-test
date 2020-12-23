@@ -2,8 +2,8 @@ name: Update Security Hub schema
 
 on:
   push:
-    branches: 
-      - master
+    paths: 
+      - *
 
 jobs:
   update-schema:
