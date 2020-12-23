@@ -1,0 +1,15 @@
+name: Update Security Hub schema
+
+jobs:
+  update-schema:
+    steps:
+      - name: Prepare Github CLI
+        env:
+          GH_REPO: xen0l/action-pr-test
+        run: |
+          curl -OL https://github.com/cli/cli/releases/download/v1.4.0/gh_1.4.0_linux_amd64.tar.gz
+          tar xf gh_1.4.0_linux_amd64.tar.gz
+          cp gh_1.4.0_linux/bin/gh ~
+          chmod +x ~/gh
+          gh pr list
+
