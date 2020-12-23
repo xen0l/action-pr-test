@@ -1,9 +1,6 @@
 name: Update Security Hub schema
 
-on:
-  push:
-    paths: 
-      - '*'
+on: [push, pull_request]
 
 jobs:
   update-schema:
