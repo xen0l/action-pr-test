@@ -1,20 +1,19 @@
 name: Update Security Hub schema
 
-on:
-  push:
-    branches: 
-      - master
-    
+on: [pull_request]
+
 jobs:
   update-schema:
+    runs-on: ubuntu-latest
     steps:
       - name: Prepare Github CLI
         env:
           GH_REPO: xen0l/action-pr-test
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -OL https://github.com/cli/cli/releases/download/v1.4.0/gh_1.4.0_linux_amd64.tar.gz
           tar xf gh_1.4.0_linux_amd64.tar.gz
-          cp gh_1.4.0_linux/bin/gh ~
+          cp gh_1.4.0_linux_amd64/bin/gh ~
           chmod +x ~/gh
           gh pr list
 
