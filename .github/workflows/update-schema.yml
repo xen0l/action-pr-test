@@ -25,5 +25,5 @@ jobs:
           echo $(date %s) >> README.md
           git add README.md
           git commit -m "Schema update $(date)"
-          gh pr create
+          gh pr create --title "Schema update $(date)" --body "Schema was updated, please review!" --reviewer xen0l --assignee xen0l
 
