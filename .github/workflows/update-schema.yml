@@ -25,9 +25,10 @@ jobs:
           GH_REPO: xen0l/action-pr-test
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo $(date %s) >> README.md
           git config user.email "adam.stevko@gmail.com"
           git config user.name "Schema Updater"
+          git checkout -b schema_update
+          echo $(date +%s) >> README.md
           git add README.md
           git commit -m "Schema update $(date)"
           gh pr create --title "Schema update $(date)" --body "Schema was updated, please review!" --reviewer xen0l --assignee xen0l --base master
