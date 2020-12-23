@@ -12,7 +12,7 @@ jobs:
         run: |
           curl -OL https://github.com/cli/cli/releases/download/v1.4.0/gh_1.4.0_linux_amd64.tar.gz
           tar xf gh_1.4.0_linux_amd64.tar.gz
-          cp gh_1.4.0_linux/bin/gh ~
+          cp gh_1.4.0_linux_amd64/bin/gh ~
           chmod +x ~/gh
           gh pr list
 
