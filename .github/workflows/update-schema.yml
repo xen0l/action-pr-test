@@ -1,5 +1,10 @@
 name: Update Security Hub schema
 
+on:
+  push:
+    branches: 
+      - master
+
 jobs:
   update-schema:
     steps:
