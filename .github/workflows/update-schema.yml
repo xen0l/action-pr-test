@@ -3,7 +3,7 @@ name: Update Security Hub schema
 on:
   push:
     paths: 
-      - *
+      - '*'
 
 jobs:
   update-schema:
