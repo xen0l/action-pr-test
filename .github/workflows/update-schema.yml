@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   update-schema:
+    runs-on: ubuntu-latest
     steps:
       - name: Prepare Github CLI
         env:
