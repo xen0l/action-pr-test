@@ -1,29 +1,70 @@
 name: Update Security Hub schema
 
-on: [pull_request]
+on:
+  workflow_dispatch
+  schedule:
+    - cron: '0 22 * * 5'
+
 
 jobs:
   update-schema:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - 3.9
+    env:
+      GH_REPO: xen0l/action-pr-test
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
+      EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
     steps:
-      - name: Prepare Github CLI
-        env:
-          GH_REPO: xen0l/action-pr-test
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -OL https://github.com/cli/cli/releases/download/v1.4.0/gh_1.4.0_linux_amd64.tar.gz
-          tar xf gh_1.4.0_linux_amd64.tar.gz
-          cp gh_1.4.0_linux_amd64/bin/gh ~
-          chmod +x ~/gh
-          gh pr list
-          
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Modify README.md
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+    - name: Configure dependency caching
+      uses: actions/cache@v1
+      id: cache
+      with:
+        path: .venv
+        key: venv-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+            venv-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip
+        pip install poetry
+
+        poetry config virtualenvs.in-project true
+        poetry install
+
+      - name: Update schema
+        run:
+          poetry run ./tools/update_schema.py
+
+      - name: Commit changes and create PR
         run: |
-          echo $(date %s) >> README.md
-          git add README.md
-          git commit -m "Schema update $(date)"
-          gh pr create
+          NO_FILES="$(git status -uno | grep -Ec '(asff/generated.py|tools/service-2.json)')"
+          if [[ ${NO_FILES} -eq 2 ]]; then
+            git checkout -b schema_update_$(date +%Y%m%d) || true
+            git add asff/generated.py tools/service-2.json
+            git commit -m "ASFF schema update $(date +%Y%m%d)"
+            git push origin schema_update_$(date +%Y%m%d)
+            gh pr create \
+              --title "ASFF schema update $(date +%Y%m%d)" \
+              --body "ASFF schema was updated, please review!" \
+              --reviewer xen0l \
+              --assignee xen0l \
+              --base master
+
+          else
+            echo "Nothing to do"
+          fi
+
 
