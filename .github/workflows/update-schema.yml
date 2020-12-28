@@ -64,6 +64,7 @@ jobs:
               --body "ASFF schema was updated, please review!" \
               --reviewer xen0l \
               --assignee xen0l \
+              --labels schema_update \
               --base master
           else
             echo "Nothing to do"
