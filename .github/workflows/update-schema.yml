@@ -1,8 +1,11 @@
 name: Update Security Hub schema
 
-on: [workflow_dispatch]
-#  - schedule:
-#      - cron: '*/5 * * * *'
+on: 
+  schedule:
+    # Run weekly on Friday at 6 AM
+    - cron: '0 6 * * 5'
+  workflow_dispatch:
+
 
 
 jobs:
