@@ -1,9 +1,9 @@
 name: Update Security Hub schema
 
 on:
-  workflow_dispatch
-  schedule:
-    - cron: '0 22 * * 5'
+  - workflow_dispatch
+  - schedule:
+      - cron: '0 22 * * 5'
 
 
 jobs:
