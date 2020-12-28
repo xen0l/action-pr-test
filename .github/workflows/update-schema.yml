@@ -16,6 +16,7 @@ jobs:
       GH_REPO: xen0l/action-pr-test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
+      GIT_AUTHOR_NAME: "github-actions[bot]"
       EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
     steps:
       - name: Checkout repository
