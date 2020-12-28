@@ -15,9 +15,6 @@ jobs:
     env:
       GH_REPO: xen0l/action-pr-test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
-      GIT_AUTHOR_NAME: "github-actions[bot]"
-      EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -52,6 +49,9 @@ jobs:
         run: |
           NO_FILES="$(git status -uno | grep -Ec '(asff/generated.py|tools/service-2.json)')"
           if [[ ${NO_FILES} -eq 2 ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
             git checkout -b schema_update_$(date +%Y%m%d) || true
             git add asff/generated.py tools/service-2.json
             git commit -m "ASFF schema update $(date +%Y%m%d)"
