@@ -44,25 +44,24 @@ jobs:
           poetry config virtualenvs.in-project true
           poetry install
 
-        - name: Update schema
-          run:
-            poetry run ./tools/update_schema.py
+      - name: Update schema
+        run:
+          poetry run ./tools/update_schema.py
 
-        - name: Commit changes and create PR
-          run: |
-            NO_FILES="$(git status -uno | grep -Ec '(asff/generated.py|tools/service-2.json)')"
-            if [[ ${NO_FILES} -eq 2 ]]; then
-              git checkout -b schema_update_$(date +%Y%m%d) || true
-              git add asff/generated.py tools/service-2.json
-              git commit -m "ASFF schema update $(date +%Y%m%d)"
-              git push origin schema_update_$(date +%Y%m%d)
-              gh pr create \
-                --title "ASFF schema update $(date +%Y%m%d)" \
-                --body "ASFF schema was updated, please review!" \
-                --reviewer xen0l \
-                --assignee xen0l \
-                --base master
-
-            else
-              echo "Nothing to do"
-            fi
+      - name: Commit changes and create PR
+        run: |
+          NO_FILES="$(git status -uno | grep -Ec '(asff/generated.py|tools/service-2.json)')"
+          if [[ ${NO_FILES} -eq 2 ]]; then
+            git checkout -b schema_update_$(date +%Y%m%d) || true
+            git add asff/generated.py tools/service-2.json
+            git commit -m "ASFF schema update $(date +%Y%m%d)"
+            git push origin schema_update_$(date +%Y%m%d)
+            gh pr create \
+              --title "ASFF schema update $(date +%Y%m%d)" \
+              --body "ASFF schema was updated, please review!" \
+              --reviewer xen0l \
+              --assignee xen0l \
+              --base master
+          else
+            echo "Nothing to do"
+          fi
